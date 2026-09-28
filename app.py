@@ -176,7 +176,7 @@ def main():
             "- **Domain Leakage:** Strict 0.00% Domain Overlap\n"
             "- **Explainability:** Saabas Tree Decomposition\n"
             "- **Execution Mode:** Strictly Local / Offline\n"
-            "- **Automated Tests:** 43/43 Passing"
+            "- **Automated Tests:** 112/112 Passing"
         )
         st.markdown("---")
 
