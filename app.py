@@ -30,9 +30,12 @@ from src.utils import (
     REPORTS_FIGURES_DIR,
     REPORTS_RESULTS_DIR
 )
-from src.model import DEFAULT_MODEL_FILE
-from src.feature_extractor import FEATURE_NAMES, extract_url_features
-from src.predictor import PhishGuardPredictor
+from src.feature_extractor import (
+    FEATURE_NAMES,
+    extract_url_features,
+    normalize_url,
+    is_apex_domain_without_www
+)
 from src.explainability import (
     PhishGuardExplainer,
     FEATURE_METADATA,
@@ -226,14 +229,30 @@ def main():
         st.caption("Press button or Enter to extract features, compute model probability, and generate local attribution.")
 
     # Execution Trigger
-    if analyze_clicked or (url_input and demo_choice != "Select a benchmark sample..."):
-        if not url_input.strip():
-            st.warning("⚠️ Please provide a non-empty URL string to analyze.")
-            return
+    if analyze_clicked or (url_input and url_input.strip()):
+        input_clean = url_input.strip()
+
+        norm_url, was_schemeless = normalize_url(input_clean)
+        is_apex = is_apex_domain_without_www(input_clean)
+
+        if was_schemeless:
+            st.info(
+                f"ℹ️ **Schemeless Input Normalized:** The entered URL was interpreted with default scheme `{norm_url}` "
+                "for feature parsing, while preserving the user-entered hostname."
+            )
+
+        if is_apex:
+            st.warning(
+                "⚠️ **Dataset Representation Notice:** The PhishGuard benchmark dataset contains legitimate URLs "
+                "exclusively in canonical `https://www.domain.tld` format. Apex-domain URLs such as "
+                f"`{norm_url}` are not represented as legitimate samples in the frozen training dataset "
+                "and may therefore receive unreliable model predictions. This is a known dataset representation "
+                "limitation, not a deployment error."
+            )
 
         with st.spinner("Extracting 27 static features and computing risk analysis..."):
             try:
-                assessment = engine.assess_url(url_input.strip())
+                assessment = engine.assess_url(input_clean)
             except Exception as e:
                 st.error(f"Analysis failed: {e}")
                 st.info("Ensure the URL input is a valid string. PhishGuard handles malformed links safely.")

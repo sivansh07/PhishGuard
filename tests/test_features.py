@@ -12,7 +12,12 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.feature_extractor import extract_url_features, FEATURE_NAMES
+from src.feature_extractor import (
+    extract_url_features,
+    FEATURE_NAMES,
+    normalize_url,
+    is_apex_domain_without_www
+)
 
 def test_valid_benign_url():
     """Validates standard benign HTTPS URL extraction."""
@@ -112,3 +117,44 @@ def test_feature_consistency():
     url = "https://test.com"
     features = extract_url_features(url)
     assert set(features.keys()) == set(FEATURE_NAMES)
+
+def test_schemeless_normalization_default_https():
+    """Verifies that schemeless user input (github.com) is normalized to https://github.com."""
+    norm_url, was_schemeless = normalize_url("github.com")
+    assert was_schemeless is True
+    assert norm_url == "https://github.com"
+    assert norm_url.startswith("https://")
+
+def test_https_url_remains_unchanged():
+    """Verifies that already scheme-qualified https URLs remain unchanged."""
+    norm_url, was_schemeless = normalize_url("https://github.com")
+    assert was_schemeless is False
+    assert norm_url == "https://github.com"
+
+def test_http_url_remains_unchanged():
+    """Verifies that already scheme-qualified http URLs remain unchanged."""
+    norm_url, was_schemeless = normalize_url("http://github.com")
+    assert was_schemeless is False
+    assert norm_url == "http://github.com"
+
+def test_www_prefix_not_automatically_added():
+    """Verifies that www. is never automatically injected into the hostname."""
+    norm_url, _ = normalize_url("github.com")
+    feats = extract_url_features("github.com")
+    assert "www." not in norm_url
+    assert norm_url == "https://github.com"
+    assert feats["hostname_length"] == len("github.com")
+
+def test_apex_domain_warning_detection():
+    """Verifies that apex-domain URLs without www trigger the apex domain detection."""
+    assert is_apex_domain_without_www("github.com") is True
+    assert is_apex_domain_without_www("https://github.com") is True
+    assert is_apex_domain_without_www("http://github.com") is True
+    assert is_apex_domain_without_www("https://example.com") is True
+
+def test_canonical_www_does_not_trigger_apex_warning():
+    """Verifies that canonical https://www.domain.tld URLs do not trigger apex domain warning."""
+    assert is_apex_domain_without_www("https://www.github.com") is False
+    assert is_apex_domain_without_www("https://www.google.com") is False
+    assert is_apex_domain_without_www("https://www.wikipedia.org") is False
+    assert is_apex_domain_without_www("www.github.com") is False

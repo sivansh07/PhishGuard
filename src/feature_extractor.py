@@ -7,7 +7,7 @@ without executing, fetching, or visiting suspicious endpoints.
 
 import re
 from urllib.parse import urlparse, urlsplit
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 
 # Common URL shortening domains used to obscure destinations
 KNOWN_SHORTENERS = frozenset({
@@ -31,6 +31,74 @@ IPV4_REGEX = re.compile(
 
 SPECIAL_CHARS_REGEX = re.compile(r"[^a-zA-Z0-9\s]")
 
+def normalize_url(raw_url: str) -> Tuple[str, bool]:
+    """Safely normalizes schemeless user input by prepending 'https://' by default.
+
+    Preserves the hostname exactly and does NOT alter already scheme-qualified URLs.
+    Does NOT add 'www.' automatically.
+
+    Args:
+        raw_url: The incoming raw URL string.
+
+    Returns:
+        Tuple of (normalized_url: str, was_schemeless: bool).
+    """
+    if not isinstance(raw_url, str):
+        raw_url = "" if raw_url is None else str(raw_url)
+
+    url = raw_url.strip()
+    if not url:
+        return "", False
+
+    # If scheme indicator is already present, leave unchanged
+    if "://" in url or re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", url):
+        return url, False
+
+    return f"https://{url}", True
+
+def is_apex_domain_without_www(url: str) -> bool:
+    """Determines whether a URL targets an apex domain without the 'www.' prefix.
+
+    The PhishGuard benchmark dataset curated legitimate URLs exclusively in the
+    canonical 'https://www.domain.tld' format. Apex-domain URLs (e.g.
+    https://github.com) are not represented as legitimate samples in the training
+    dataset.
+
+    Args:
+        url: The URL string to inspect.
+
+    Returns:
+        True if the hostname is a non-IP domain that omits 'www.' and has no subdomains.
+    """
+    if not url:
+        return False
+
+    norm_url, _ = normalize_url(url)
+    try:
+        parsed = urlsplit(norm_url)
+        hostname = (parsed.hostname or "").lower()
+    except Exception:
+        return False
+
+    if not hostname or IPV4_REGEX.match(hostname):
+        return False
+
+    if hostname.startswith("www."):
+        return False
+
+    # Split domain labels
+    parts = hostname.split(".")
+    if len(parts) < 2:
+        return False
+
+    # Check subdomain count matching canonical feature definition
+    subdomains = parts
+    if subdomains and subdomains[0] == "www":
+        subdomains = subdomains[1:]
+    num_subdomains = max(0, len(subdomains) - 2) if len(subdomains) >= 2 else 0
+
+    return num_subdomains == 0
+
 def _normalize_and_split_url(raw_url: str):
     """Safely normalizes and parses a URL string without network calls.
 
@@ -40,26 +108,24 @@ def _normalize_and_split_url(raw_url: str):
     Returns:
         Tuple of (normalized_url, parsed_split_result, hostname)
     """
-    if not isinstance(raw_url, str):
-        raw_url = "" if raw_url is None else str(raw_url)
+    norm_url, _ = normalize_url(raw_url)
 
-    url = raw_url.strip()
-
-    # Prepend scheme if absent so urlsplit accurately extracts hostname
-    if not re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", url):
-        parse_target = "http://" + url
-    else:
-        parse_target = url
+    if not norm_url:
+        try:
+            parsed = urlsplit("http://empty.invalid")
+        except Exception:
+            parsed = urlsplit("")
+        return "", parsed, ""
 
     try:
-        parsed = urlsplit(parse_target)
+        parsed = urlsplit(norm_url)
         hostname = (parsed.hostname or "").lower()
     except Exception:
         # Fallback for heavily malformed URL strings
         parsed = urlsplit("http://malformed.invalid")
         hostname = ""
 
-    return url, parsed, hostname
+    return norm_url, parsed, hostname
 
 def extract_url_features(url: str) -> Dict[str, Any]:
     """Safely extracts comprehensive lexical and structural features from a URL string.
