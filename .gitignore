@@ -1,0 +1,40 @@
+# =============================================================================
+# PhishGuard .gitignore
+# =============================================================================
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+*.env
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# IDE and OS Metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Large Raw Datasets (Re-downloadable via src/download_dataset.py)
+data/raw/*.zip
+data/raw/*.tar.gz
+data/raw/*.csv
+
+# Temporary scratch & test artifacts
+scratch/
+reports/results/*_raw.json

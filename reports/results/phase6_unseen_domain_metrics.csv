@@ -1,0 +1,7 @@
+Model,Evaluation_Setting,Accuracy,Precision,Recall,F1-Score,ROC-AUC,False_Negatives,False_Positives
+LogisticRegression,Standard Random Split (Phase 4),0.9976,0.9999,0.9944,0.9972,0.9986,113,1
+LogisticRegression,Unseen-Domain Grouped Split (Phase 6),0.9977,0.9999,0.9946,0.9973,0.9986,108,2
+DecisionTreeClassifier,Standard Random Split (Phase 4),0.9979,0.9996,0.9956,0.9976,0.998,89,9
+DecisionTreeClassifier,Unseen-Domain Grouped Split (Phase 6),0.9979,0.9997,0.9954,0.9975,0.998,93,6
+RandomForestClassifier,Standard Random Split (Phase 4),0.9979,0.9997,0.9955,0.9976,0.9982,90,7
+RandomForestClassifier,Unseen-Domain Grouped Split (Phase 6),0.9979,0.9997,0.9954,0.9975,0.9983,93,7

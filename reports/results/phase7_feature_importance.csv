@@ -1,0 +1,28 @@
+rank,feature,name,importance,category,description
+1,has_https,HTTPS Scheme Indicator,0.4446443153828219,Security & Protocol,Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0).
+2,path_length,Path Length,0.14776653237836396,Length & Hierarchy,Character count of the URL path following the hostname.
+3,num_slashes,Slash Count,0.1331494463533887,Delimiter & Punctuation,Total count of forward slash ('/') characters in the URL.
+4,digit_ratio,Digit Ratio,0.0634567051093364,Character Distribution,Proportion of characters in the URL that are numeric digits (0.0 to 1.0).
+5,num_special_chars,Special Character Count,0.04755216777408359,Character Distribution,Total count of non-alphanumeric punctuation and delimiter characters.
+6,num_digits,Digit Count,0.04051291270264782,Character Distribution,Total count of numeric characters (0-9) throughout the URL.
+7,url_length,URL Length,0.03469247227711836,Length & Hierarchy,Total character count of the complete URL string.
+8,num_subdomains,Subdomain Count,0.025215425890408604,Domain & Infrastructure,Number of subdomain labels preceding the registered domain name.
+9,num_dots,Dot Count,0.02257949886855803,Delimiter & Punctuation,Total count of period ('.') characters throughout the URL.
+10,hostname_length,Hostname Length,0.01739984000010552,Length & Hierarchy,Character count of the fully qualified domain name (FQDN).
+11,num_hyphens,Hyphen Count,0.011709606621250195,Delimiter & Punctuation,Total count of hyphen ('-') characters in the URL.
+12,special_char_ratio,Special Character Ratio,0.00749565828412883,Character Distribution,Proportion of characters in the URL that are non-alphanumeric punctuation (0.0 to 1.0).
+13,suspicious_keyword_present,Suspicious Keyword Flag,0.001872470162228613,Lexical Semantics,Binary flag indicating presence of at least one suspicious authentication keyword.
+14,suspicious_keyword_count,Suspicious Keyword Count,0.001522513152378522,Lexical Semantics,"Total count of security/authentication keywords (e.g., 'login', 'verify', 'account', 'banking')."
+15,num_question_marks,Question Mark Count,0.00024261878970704395,Delimiter & Punctuation,Count of question mark ('?') delimiters initiating query strings.
+16,has_url_shortener,URL Shortener Domain,0.00010439846559905468,Domain & Infrastructure,Binary flag indicating whether the domain belongs to a recognized URL shortening service.
+17,query_length,Query Length,2.8475023098481638e-05,Length & Hierarchy,Character count of the query parameter string starting after '?'.
+18,has_query,Query Component Presence,2.70234020152978e-05,Length & Hierarchy,Binary flag indicating whether a query string component is present.
+19,has_fragment,URL Fragment Presence,1.4098723966175613e-05,Length & Hierarchy,Binary flag indicating whether a '#' client-side fragment identifier exists.
+20,has_at_symbol,@ Symbol Delimiter,8.083056225776703e-06,Security & Protocol,Binary flag indicating presence of '@' (HTTP basic authentication delimiter).
+21,num_underscores,Underscore Count,2.935505347078048e-06,Delimiter & Punctuation,Total count of underscore ('_') characters in the URL.
+22,num_equal_signs,Equal Sign Count,1.6313264119433113e-06,Delimiter & Punctuation,Count of equal signs ('=') assigning query parameter values.
+23,has_ip_address,Direct IP Address Host,1.1225585004189699e-06,Security & Protocol,Binary flag indicating whether the hostname is an IPv4 or IPv6 address instead of a domain name.
+24,num_percent_signs,Percent Sign Count,4.8192309810911196e-08,Delimiter & Punctuation,Count of percent ('%') characters indicating hexadecimal URL encoding.
+25,num_ampersands,Ampersand Count,0.0,Delimiter & Punctuation,Count of ampersand ('&') characters separating query parameters.
+26,has_port,Explicit Non-Standard Port,0.0,Security & Protocol,Binary flag indicating whether an explicit port number is declared in the hostname.
+27,is_encoded,Percent-Encoding Flag,0.0,Security & Protocol,Binary flag indicating whether percent-encoded characters ('%XX') are present.

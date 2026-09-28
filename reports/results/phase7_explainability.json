@@ -1,0 +1,48 @@
+{
+    "module": "PhishGuard Explainability Engine",
+    "model_architecture": "RandomForestClassifier",
+    "feature_count": 27,
+    "global_importance_summary": {
+        "top_5_features": [
+            {
+                "rank": 1,
+                "feature": "has_https",
+                "importance": 0.4446443153828219
+            },
+            {
+                "rank": 2,
+                "feature": "path_length",
+                "importance": 0.14776653237836396
+            },
+            {
+                "rank": 3,
+                "feature": "num_slashes",
+                "importance": 0.1331494463533887
+            },
+            {
+                "rank": 4,
+                "feature": "digit_ratio",
+                "importance": 0.0634567051093364
+            },
+            {
+                "rank": 5,
+                "feature": "num_special_chars",
+                "importance": 0.04755216777408359
+            }
+        ],
+        "sum_of_importances": 1.0
+    },
+    "attribution_methodology": {
+        "global_method": "Random Forest Gini Impurity Decrease (Population Level)",
+        "local_method": "Saabas Decision Path Decomposition (Instance Level)",
+        "mathematical_property": "P(phishing|x) = Ensemble Bias + Sum(Local Feature Contributions)"
+    },
+    "latency_benchmark": {
+        "prediction_latency_ms": 35.04,
+        "prediction_plus_explanation_latency_ms": 74.73,
+        "explainability_overhead_ms": 39.69,
+        "n_runs_per_url": 50,
+        "sample_count": 4
+    },
+    "academic_disclosure": "1. Global feature importance reflects model behavior across the training distribution and does not establish causal attacker mechanisms. 2. Local feature attributions decompose the model's internal probability calculation and must not be interpreted as proving attacker intent. 3. Explanations rely strictly on 27 static URL features without inspecting server state or rendering webpage content."
+}

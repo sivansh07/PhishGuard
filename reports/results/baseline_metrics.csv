@@ -1,0 +1,4 @@
+Model,Accuracy,Precision,Recall,F1-Score,ROC-AUC,True Negatives,False Positives,False Negatives (Missed Phish),True Positives,False Negative Rate
+LogisticRegression,0.9976,0.9999,0.9944,0.9972,0.9986,26969,1,113,19991,0.0056
+DecisionTreeClassifier,0.9979,0.9996,0.9956,0.9976,0.998,26961,9,89,20015,0.0044
+RandomForestClassifier,0.9979,0.9997,0.9955,0.9976,0.9982,26963,7,90,20014,0.0045

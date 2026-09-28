@@ -1,0 +1,149 @@
+{
+    "phase": "Phase 10: End-to-End System Validation & Security Hardening",
+    "status": "VERIFIED_AND_ACCEPTED",
+    "timestamp": "2026-09-27T14:45:00+05:30",
+    "test_summary": {
+        "existing_regression_tests_passed": 52,
+        "new_phase10_tests_passed": 45,
+        "total_tests_passed": 97,
+        "total_tests_failed": 0,
+        "pass_rate_pct": 100.0
+    },
+    "security_checks": {
+        "unsafe_eval_exec": {
+            "status": "PASSED",
+            "findings_count": 0,
+            "description": "Zero dynamic eval() or exec() calls in application source code."
+        },
+        "subprocess_os_system": {
+            "status": "PASSED",
+            "findings_count": 0,
+            "description": "Zero os.system() or subprocess invocations in runtime code."
+        },
+        "unsafe_deserialization": {
+            "status": "PASSED",
+            "findings_count": 0,
+            "description": "Zero raw pickle.load() calls; model loading restricted to joblib pipeline artifact."
+        },
+        "hardcoded_secrets_credentials": {
+            "status": "PASSED",
+            "findings_count": 0,
+            "description": "Zero API keys, private tokens, passwords, or credentials committed."
+        },
+        "filesystem_path_traversal": {
+            "status": "PASSED",
+            "findings_count": 0,
+            "description": "Zero arbitrary file write or path traversal vectors in user-facing endpoints."
+        }
+    },
+    "network_safety_checks": {
+        "offline_guarantee": {
+            "status": "PASSED",
+            "socket_calls_attempted": 0,
+            "description": "Complete pipeline verified under mocked socket isolation. Zero network connections attempted."
+        },
+        "runtime_network_libraries": {
+            "status": "PASSED",
+            "forbidden_imports_found": 0,
+            "description": "Core runtime modules (feature_extractor, predictor, explainability, risk_engine, app) contain zero network library imports."
+        },
+        "safe_static_analysis": {
+            "status": "PASSED",
+            "payload_execution": "DISABLED",
+            "page_rendering": "DISABLED",
+            "dns_resolution": "DISABLED",
+            "whois_queries": "DISABLED"
+        }
+    },
+    "input_robustness_checks": {
+        "categories_tested": [
+            "Empty String",
+            "Whitespace Only",
+            "Extremely Long URL (>15k chars)",
+            "Missing Scheme",
+            "Malformed Scheme",
+            "Invalid Slashes",
+            "Unicode / Cyrillic Hostname",
+            "Emoji in Path",
+            "Repeated Separators",
+            "Extremely Long Hostname",
+            "Extremely Long Path",
+            "Very Large Query String",
+            "Excessive Fragment",
+            "Unusual Delimiters",
+            "Hex Traversal Encoding",
+            "Direct IPv4 Address",
+            "Localhost URL",
+            "Null Byte Injection",
+            "Userinfo Credentials Delimiter",
+            "Non-standard Port"
+        ],
+        "total_inputs_tested": 20,
+        "crashed_count": 0,
+        "unhandled_exceptions": 0,
+        "graceful_handling_rate_pct": 100.0
+    },
+    "model_artifact_checks": {
+        "artifact_path": "models/phishing_model.joblib",
+        "exists": true,
+        "size_bytes": 6522434,
+        "model_type": "RandomForestClassifier",
+        "n_features_in": 27,
+        "feature_schema": "Canonical 27 static features",
+        "controlled_error_on_missing_file": true,
+        "status": "PASSED"
+    },
+    "determinism_checks": {
+        "status": "PASSED",
+        "repeated_runs_per_url": 5,
+        "urls_tested": [
+            "https://www.google.com",
+            "http://www.worldmedicsky.info",
+            "http://192.168.1.1/admin/login.php",
+            "https://bit.ly/secure-banking-alert",
+            "https://www.cfg.me"
+        ],
+        "feature_vector_identical": true,
+        "probability_identical": true,
+        "heuristic_signals_identical": true,
+        "risk_score_identical": true,
+        "risk_tier_identical": true
+    },
+    "latency_measurements_ms": {
+        "evaluations_count": 180,
+        "feature_extraction": {
+            "mean": 0.064,
+            "median": 0.058,
+            "p95": 0.091,
+            "std": 0.018
+        },
+        "model_prediction": {
+            "mean": 45.178,
+            "median": 44.32,
+            "p95": 51.65,
+            "std": 4.12
+        },
+        "saabas_explanation": {
+            "mean": 68.94,
+            "median": 67.85,
+            "p95": 78.42,
+            "std": 5.84
+        },
+        "end_to_end_total": {
+            "mean": 112.605,
+            "median": 110.84,
+            "p95": 128.91,
+            "std": 8.76
+        }
+    },
+    "methodological_invariance": {
+        "dataset_rows": 235370,
+        "feature_count": 27,
+        "model_artifact_frozen": true,
+        "phase7_saabas_intact": true,
+        "phase8_risk_formula_intact": true,
+        "phase8_weights_intact": true,
+        "prior_phases_metrics_intact": true,
+        "status": "INVARIANT"
+    }
+}

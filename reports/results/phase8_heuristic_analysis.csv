@@ -1,0 +1,12 @@
+heuristic_id,heuristic_name,category,weight,triggered_count,phishing_count,legitimate_count,phishing_precision,fn_overlap_count,additional_false_positives,status
+H_IP_HOST,Direct IP Address Host,High-Severity Evasion,8.0,117,117,0,1.0,0,0,Validated
+H_AT_SYMBOL,@ Symbol Credential Delimiter,High-Severity Evasion,8.0,296,296,0,1.0,0,0,Validated
+H_URL_SHORTENER,URL Shortener Service,High-Severity Evasion,6.0,123,123,0,1.0,1,0,Validated
+H_HEX_ENCODING,Hexadecimal Percent-Encoding,Obfuscation,4.0,167,167,0,1.0,0,0,Validated
+H_EXCESS_SUBDOMAINS,Excessive Subdomain Hierarchy,Structural Complexity,4.0,573,565,8,0.986,3,8,Validated
+H_HIGH_DIGIT_RATIO,Elevated Numeric Character Density,Structural Complexity,4.0,1939,1935,4,0.9979,0,2,Validated
+H_SUSPICIOUS_KEYWORD,Authentication Keyword Concentration,Lexical Semantics,3.0,1699,1561,138,0.9188,1,137,Validated
+H_MULTIPLE_HYPHENS,Multiple Hyphen Delimiters,Structural Complexity,2.0,1449,1423,26,0.9821,0,26,Validated
+H_EXCESSIVE_LENGTH,Abnormally Long URL,Structural Complexity,3.0,2312,2312,0,1.0,0,0,Validated
+H_UNENCRYPTED_HTTP,Unencrypted HTTP Scheme,Security & Protocol,4.0,10301,10301,0,1.0,0,0,Validated
+H_STANDARD_BENIGN_PROFILE,Standard Benign Root Structure,Protective Context,-3.0,26003,174,25829,0.0067,68,25829,Validated

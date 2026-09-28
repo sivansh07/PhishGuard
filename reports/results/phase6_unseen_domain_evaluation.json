@@ -1,0 +1,345 @@
+{
+    "experiment_name": "Unseen-Domain Grouped Evaluation",
+    "proxy_evaluation_description": "Zero-day-like generalization setting evaluating completely unseen phishing domains.",
+    "domain_overlap_audit": {
+        "total_unique_domains": 220086,
+        "training_domain_count": 176072,
+        "testing_domain_count": 44014,
+        "shared_domain_count": 0,
+        "shared_domain_percentage": 0.0,
+        "training_url_count": 188296,
+        "testing_url_count": 47074,
+        "train_phishing_count": 80416,
+        "train_legitimate_count": 107880,
+        "test_phishing_count": 20104,
+        "test_legitimate_count": 26970,
+        "train_phishing_percentage": 42.71,
+        "test_phishing_percentage": 42.71,
+        "split_verification": "PASS"
+    },
+    "unseen_domain_results": {
+        "LogisticRegression": {
+            "model_name": "LogisticRegression",
+            "accuracy": 0.9977,
+            "precision": 0.9999,
+            "recall": 0.9946,
+            "f1_score": 0.9973,
+            "roc_auc": 0.9986,
+            "average_precision_pr_auc": 0.9988,
+            "brier_score": 0.0023,
+            "confusion_matrix": {
+                "true_negatives": 26968,
+                "false_positives": 2,
+                "false_negatives": 108,
+                "true_positives": 19996
+            },
+            "false_negative_rate": 0.0054,
+            "false_positive_rate": 0.0001
+        },
+        "DecisionTreeClassifier": {
+            "model_name": "DecisionTreeClassifier",
+            "accuracy": 0.9979,
+            "precision": 0.9997,
+            "recall": 0.9954,
+            "f1_score": 0.9975,
+            "roc_auc": 0.998,
+            "average_precision_pr_auc": 0.998,
+            "brier_score": 0.0021,
+            "confusion_matrix": {
+                "true_negatives": 26964,
+                "false_positives": 6,
+                "false_negatives": 93,
+                "true_positives": 20011
+            },
+            "false_negative_rate": 0.0046,
+            "false_positive_rate": 0.0002
+        },
+        "RandomForestClassifier": {
+            "model_name": "RandomForestClassifier",
+            "accuracy": 0.9979,
+            "precision": 0.9997,
+            "recall": 0.9954,
+            "f1_score": 0.9975,
+            "roc_auc": 0.9983,
+            "average_precision_pr_auc": 0.9987,
+            "brier_score": 0.0022,
+            "confusion_matrix": {
+                "true_negatives": 26963,
+                "false_positives": 7,
+                "false_negatives": 93,
+                "true_positives": 20011
+            },
+            "false_negative_rate": 0.0046,
+            "false_positive_rate": 0.0003
+        }
+    },
+    "generalization_gaps": {
+        "LogisticRegression": {
+            "accuracy_gap": -0.0001,
+            "precision_gap": 0.0,
+            "recall_gap": -0.0002,
+            "f1_gap": -0.0001,
+            "roc_auc_gap": 0.0,
+            "additional_false_negatives": -5
+        },
+        "DecisionTreeClassifier": {
+            "accuracy_gap": 0.0,
+            "precision_gap": -0.0001,
+            "recall_gap": 0.0002,
+            "f1_gap": 0.0001,
+            "roc_auc_gap": 0.0,
+            "additional_false_negatives": 4
+        },
+        "RandomForestClassifier": {
+            "accuracy_gap": 0.0,
+            "precision_gap": 0.0,
+            "recall_gap": 0.0001,
+            "f1_gap": 0.0001,
+            "roc_auc_gap": -0.0001,
+            "additional_false_negatives": 3
+        }
+    },
+    "5_fold_stratified_group_kfold_cv": {
+        "LogisticRegression": {
+            "accuracy_mean": 0.9975,
+            "accuracy_std": 0.0002,
+            "precision_mean": 0.9999,
+            "precision_std": 0.0001,
+            "recall_mean": 0.9942,
+            "recall_std": 0.0005,
+            "f1_mean": 0.997,
+            "f1_std": 0.0003,
+            "roc_auc_mean": 0.9985,
+            "roc_auc_std": 0.0002
+        },
+        "DecisionTreeClassifier": {
+            "accuracy_mean": 0.9979,
+            "accuracy_std": 0.0001,
+            "precision_mean": 0.9996,
+            "precision_std": 0.0001,
+            "recall_mean": 0.9954,
+            "recall_std": 0.0002,
+            "f1_mean": 0.9975,
+            "f1_std": 0.0001,
+            "roc_auc_mean": 0.9981,
+            "roc_auc_std": 0.0002
+        },
+        "RandomForestClassifier": {
+            "accuracy_mean": 0.9978,
+            "accuracy_std": 0.0001,
+            "precision_mean": 0.9995,
+            "precision_std": 0.0002,
+            "recall_mean": 0.9953,
+            "recall_std": 0.0002,
+            "f1_mean": 0.9974,
+            "f1_std": 0.0001,
+            "roc_auc_mean": 0.9983,
+            "roc_auc_std": 0.0001
+        }
+    },
+    "false_negative_structural_profile": {
+        "LogisticRegression": {
+            "unseen_false_negatives_count": 108,
+            "percentage_of_all_unseen_phishing": 0.54,
+            "pct_with_https": 100.0,
+            "pct_with_no_keywords": 99.07,
+            "pct_with_no_ip": 100.0,
+            "pct_with_zero_subdomains": 70.37,
+            "pct_with_no_query": 100.0,
+            "pct_with_no_encoding": 100.0,
+            "structural_averages": {
+                "mean_url_length": 30.8,
+                "mean_path_length": 0.0,
+                "mean_num_slashes": 2.0,
+                "mean_num_digits": 0.33,
+                "mean_special_chars": 5.8
+            },
+            "anonymized_samples": [
+                {
+                    "anonymized_id": "ANON_UNSEEN_830dd0e883bb",
+                    "url_length": 23,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_17d894f7ef1c",
+                    "url_length": 28,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_1effe9c0a40a",
+                    "url_length": 26,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_f13483d8bf66",
+                    "url_length": 38,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 2,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_5c2042127a0b",
+                    "url_length": 41,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 2,
+                    "keywords_present": 0
+                }
+            ],
+            "evasion_pattern": "In the unseen-domain setting for LogisticRegression, 100.0% of missed phishing links used the HTTPS URL scheme, 99.07% contained zero suspicious authentication keywords, and 70.37% had zero subdomains. Furthermore, their mean path length was only 0.0 characters. These previously unseen domains deliberately adopt benign structural conventions, successfully bypassing lexical filters."
+        },
+        "DecisionTreeClassifier": {
+            "unseen_false_negatives_count": 93,
+            "percentage_of_all_unseen_phishing": 0.46,
+            "pct_with_https": 100.0,
+            "pct_with_no_keywords": 97.85,
+            "pct_with_no_ip": 100.0,
+            "pct_with_zero_subdomains": 80.65,
+            "pct_with_no_query": 100.0,
+            "pct_with_no_encoding": 100.0,
+            "structural_averages": {
+                "mean_url_length": 29.85,
+                "mean_path_length": 0.0,
+                "mean_num_slashes": 2.0,
+                "mean_num_digits": 0.33,
+                "mean_special_chars": 5.47
+            },
+            "anonymized_samples": [
+                {
+                    "anonymized_id": "ANON_UNSEEN_830dd0e883bb",
+                    "url_length": 23,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_17d894f7ef1c",
+                    "url_length": 28,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_1effe9c0a40a",
+                    "url_length": 26,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_5c2042127a0b",
+                    "url_length": 41,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 2,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_ffba1e4376d0",
+                    "url_length": 30,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                }
+            ],
+            "evasion_pattern": "In the unseen-domain setting for DecisionTreeClassifier, 100.0% of missed phishing links used the HTTPS URL scheme, 97.85% contained zero suspicious authentication keywords, and 80.65% had zero subdomains. Furthermore, their mean path length was only 0.0 characters. These previously unseen domains deliberately adopt benign structural conventions, successfully bypassing lexical filters."
+        },
+        "RandomForestClassifier": {
+            "unseen_false_negatives_count": 93,
+            "percentage_of_all_unseen_phishing": 0.46,
+            "pct_with_https": 100.0,
+            "pct_with_no_keywords": 98.92,
+            "pct_with_no_ip": 100.0,
+            "pct_with_zero_subdomains": 80.65,
+            "pct_with_no_query": 100.0,
+            "pct_with_no_encoding": 100.0,
+            "structural_averages": {
+                "mean_url_length": 29.65,
+                "mean_path_length": 0.0,
+                "mean_num_slashes": 2.0,
+                "mean_num_digits": 0.35,
+                "mean_special_chars": 5.45
+            },
+            "anonymized_samples": [
+                {
+                    "anonymized_id": "ANON_UNSEEN_830dd0e883bb",
+                    "url_length": 23,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_17d894f7ef1c",
+                    "url_length": 28,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_1effe9c0a40a",
+                    "url_length": 26,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_5c2042127a0b",
+                    "url_length": 41,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 2,
+                    "keywords_present": 0
+                },
+                {
+                    "anonymized_id": "ANON_UNSEEN_ffba1e4376d0",
+                    "url_length": 30,
+                    "has_https": 1,
+                    "path_length": 0,
+                    "num_subdomains": 0,
+                    "num_digits": 0,
+                    "keywords_present": 0
+                }
+            ],
+            "evasion_pattern": "In the unseen-domain setting for RandomForestClassifier, 100.0% of missed phishing links used the HTTPS URL scheme, 98.92% contained zero suspicious authentication keywords, and 80.65% had zero subdomains. Furthermore, their mean path length was only 0.0 characters. These previously unseen domains deliberately adopt benign structural conventions, successfully bypassing lexical filters."
+        }
+    },
+    "security_verdict": {
+        "candidate_model": "RandomForestClassifier",
+        "unseen_domain_f1": 0.9975,
+        "unseen_domain_recall": 0.9954,
+        "unseen_domain_roc_auc": 0.9983,
+        "generalization_gap_f1": 0.0001,
+        "conclusion": "The URL-only feature pipeline retains exceptional generalization to unseen domains (99.54% Recall, 99.75% F1, ROC-AUC 0.9983 with ZERO domain overlap). The generalization gap is practically negligible (<0.01%), providing evidence that the 27 static URL features retain predictive signal beyond the specific domains observed during training."
+    }
+}

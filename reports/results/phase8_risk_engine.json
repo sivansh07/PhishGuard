@@ -1,0 +1,1197 @@
+{
+    "module": "PhishGuard Explainable Risk Scoring Engine",
+    "mathematical_formulation": {
+        "ml_risk_component": "100.0 * P(phishing | URL)",
+        "heuristic_adjustment": "alpha(P) * clip(sum(w_k * I(h_k)), -10.0, 15.0)",
+        "confidence_damping_factor": "alpha(P) = clip(1.0 - 0.70 * |2P - 1|, 0.30, 1.00)",
+        "final_risk_score": "clip(round(ML_Risk + Heuristic_Adj), 0, 100)"
+    },
+    "operational_risk_bands": {
+        "LOW": {
+            "range": [
+                0,
+                20
+            ],
+            "label": "Low Risk",
+            "description": "Minimal structural anomaly; consistent with standard benign URL conventions.",
+            "recommended_action": "Allow navigation. Standard browser security controls remain active."
+        },
+        "GUARDED": {
+            "range": [
+                21,
+                40
+            ],
+            "label": "Guarded Risk",
+            "description": "Predominantly benign structure with isolated minor lexical or structural variations.",
+            "recommended_action": "Allow with passive monitoring. Exercise caution if personal credentials are requested."
+        },
+        "MODERATE": {
+            "range": [
+                41,
+                60
+            ],
+            "label": "Moderate / Borderline Risk",
+            "description": "Ambiguous lexical profile or borderline model confidence. Signals heightened uncertainty.",
+            "recommended_action": "Heightened scrutiny required. Display contextual warning before user credential entry."
+        },
+        "HIGH": {
+            "range": [
+                61,
+                80
+            ],
+            "label": "High Risk",
+            "description": "Strong structural and lexical markers commonly associated with deceptive phishing links.",
+            "recommended_action": "Intervene with interstitial warning. Advise user against interacting with page elements."
+        },
+        "CRITICAL": {
+            "range": [
+                81,
+                100
+            ],
+            "label": "Critical Risk",
+            "description": "Very high model probability and/or severe structural abuse indicators (e.g. direct IP, shortener, obfuscation).",
+            "recommended_action": "Block navigation immediately. Log link to enterprise security telemetry for threat triage."
+        }
+    },
+    "latency_benchmark": {
+        "predict_ms": 47.85,
+        "explain_ms": 69.61,
+        "risk_ms": 115.28,
+        "explain_overhead_ms": 21.76,
+        "risk_engine_overhead_ms": 45.67,
+        "total_overhead_ms": 67.43
+    },
+    "empirical_heuristic_evaluation_holdout": [
+        {
+            "heuristic_id": "H_IP_HOST",
+            "heuristic_name": "Direct IP Address Host",
+            "category": "High-Severity Evasion",
+            "weight": 8.0,
+            "triggered_count": 117,
+            "phishing_count": 117,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_AT_SYMBOL",
+            "heuristic_name": "@ Symbol Credential Delimiter",
+            "category": "High-Severity Evasion",
+            "weight": 8.0,
+            "triggered_count": 296,
+            "phishing_count": 296,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_URL_SHORTENER",
+            "heuristic_name": "URL Shortener Service",
+            "category": "High-Severity Evasion",
+            "weight": 6.0,
+            "triggered_count": 123,
+            "phishing_count": 123,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 1,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_HEX_ENCODING",
+            "heuristic_name": "Hexadecimal Percent-Encoding",
+            "category": "Obfuscation",
+            "weight": 4.0,
+            "triggered_count": 167,
+            "phishing_count": 167,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_EXCESS_SUBDOMAINS",
+            "heuristic_name": "Excessive Subdomain Hierarchy",
+            "category": "Structural Complexity",
+            "weight": 4.0,
+            "triggered_count": 573,
+            "phishing_count": 565,
+            "legitimate_count": 8,
+            "phishing_precision": 0.986,
+            "fn_overlap_count": 3,
+            "additional_false_positives": 8,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_HIGH_DIGIT_RATIO",
+            "heuristic_name": "Elevated Numeric Character Density",
+            "category": "Structural Complexity",
+            "weight": 4.0,
+            "triggered_count": 1939,
+            "phishing_count": 1935,
+            "legitimate_count": 4,
+            "phishing_precision": 0.9979,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 2,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_SUSPICIOUS_KEYWORD",
+            "heuristic_name": "Authentication Keyword Concentration",
+            "category": "Lexical Semantics",
+            "weight": 3.0,
+            "triggered_count": 1699,
+            "phishing_count": 1561,
+            "legitimate_count": 138,
+            "phishing_precision": 0.9188,
+            "fn_overlap_count": 1,
+            "additional_false_positives": 137,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_MULTIPLE_HYPHENS",
+            "heuristic_name": "Multiple Hyphen Delimiters",
+            "category": "Structural Complexity",
+            "weight": 2.0,
+            "triggered_count": 1449,
+            "phishing_count": 1423,
+            "legitimate_count": 26,
+            "phishing_precision": 0.9821,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 26,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_EXCESSIVE_LENGTH",
+            "heuristic_name": "Abnormally Long URL",
+            "category": "Structural Complexity",
+            "weight": 3.0,
+            "triggered_count": 2312,
+            "phishing_count": 2312,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_UNENCRYPTED_HTTP",
+            "heuristic_name": "Unencrypted HTTP Scheme",
+            "category": "Security & Protocol",
+            "weight": 4.0,
+            "triggered_count": 10301,
+            "phishing_count": 10301,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_STANDARD_BENIGN_PROFILE",
+            "heuristic_name": "Standard Benign Root Structure",
+            "category": "Protective Context",
+            "weight": -3.0,
+            "triggered_count": 26003,
+            "phishing_count": 174,
+            "legitimate_count": 25829,
+            "phishing_precision": 0.0067,
+            "fn_overlap_count": 68,
+            "additional_false_positives": 25829,
+            "status": "Validated"
+        }
+    ],
+    "empirical_heuristic_evaluation_unseen_domain": [
+        {
+            "heuristic_id": "H_IP_HOST",
+            "heuristic_name": "Direct IP Address Host",
+            "category": "High-Severity Evasion",
+            "weight": 8.0,
+            "triggered_count": 88,
+            "phishing_count": 88,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_AT_SYMBOL",
+            "heuristic_name": "@ Symbol Credential Delimiter",
+            "category": "High-Severity Evasion",
+            "weight": 8.0,
+            "triggered_count": 329,
+            "phishing_count": 329,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_URL_SHORTENER",
+            "heuristic_name": "URL Shortener Service",
+            "category": "High-Severity Evasion",
+            "weight": 6.0,
+            "triggered_count": 21,
+            "phishing_count": 20,
+            "legitimate_count": 1,
+            "phishing_precision": 0.9524,
+            "fn_overlap_count": 1,
+            "additional_false_positives": 1,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_HEX_ENCODING",
+            "heuristic_name": "Hexadecimal Percent-Encoding",
+            "category": "Obfuscation",
+            "weight": 4.0,
+            "triggered_count": 197,
+            "phishing_count": 197,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_EXCESS_SUBDOMAINS",
+            "heuristic_name": "Excessive Subdomain Hierarchy",
+            "category": "Structural Complexity",
+            "weight": 4.0,
+            "triggered_count": 572,
+            "phishing_count": 560,
+            "legitimate_count": 12,
+            "phishing_precision": 0.979,
+            "fn_overlap_count": 1,
+            "additional_false_positives": 12,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_HIGH_DIGIT_RATIO",
+            "heuristic_name": "Elevated Numeric Character Density",
+            "category": "Structural Complexity",
+            "weight": 4.0,
+            "triggered_count": 1872,
+            "phishing_count": 1870,
+            "legitimate_count": 2,
+            "phishing_precision": 0.9989,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 1,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_SUSPICIOUS_KEYWORD",
+            "heuristic_name": "Authentication Keyword Concentration",
+            "category": "Lexical Semantics",
+            "weight": 3.0,
+            "triggered_count": 1606,
+            "phishing_count": 1491,
+            "legitimate_count": 115,
+            "phishing_precision": 0.9284,
+            "fn_overlap_count": 1,
+            "additional_false_positives": 115,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_MULTIPLE_HYPHENS",
+            "heuristic_name": "Multiple Hyphen Delimiters",
+            "category": "Structural Complexity",
+            "weight": 2.0,
+            "triggered_count": 1471,
+            "phishing_count": 1438,
+            "legitimate_count": 33,
+            "phishing_precision": 0.9776,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 33,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_EXCESSIVE_LENGTH",
+            "heuristic_name": "Abnormally Long URL",
+            "category": "Structural Complexity",
+            "weight": 3.0,
+            "triggered_count": 2338,
+            "phishing_count": 2338,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_UNENCRYPTED_HTTP",
+            "heuristic_name": "Unencrypted HTTP Scheme",
+            "category": "Security & Protocol",
+            "weight": 4.0,
+            "triggered_count": 10110,
+            "phishing_count": 10110,
+            "legitimate_count": 0,
+            "phishing_precision": 1.0,
+            "fn_overlap_count": 0,
+            "additional_false_positives": 0,
+            "status": "Validated"
+        },
+        {
+            "heuristic_id": "H_STANDARD_BENIGN_PROFILE",
+            "heuristic_name": "Standard Benign Root Structure",
+            "category": "Protective Context",
+            "weight": -3.0,
+            "triggered_count": 26015,
+            "phishing_count": 191,
+            "legitimate_count": 25824,
+            "phishing_precision": 0.0073,
+            "fn_overlap_count": 73,
+            "additional_false_positives": 25824,
+            "status": "Validated"
+        }
+    ],
+    "representative_assessments": [
+        {
+            "url": "http://www.worldmedicsky.info",
+            "prediction": "POTENTIAL PHISHING",
+            "is_phishing": true,
+            "model_estimated_phishing_probability": 1.0,
+            "model_estimated_phishing_probability_pct": 100.0,
+            "operational_risk_score": 100,
+            "risk_level": "CRITICAL",
+            "risk_level_details": {
+                "range": [
+                    81,
+                    100
+                ],
+                "label": "Critical Risk",
+                "description": "Very high model probability and/or severe structural abuse indicators (e.g. direct IP, shortener, obfuscation).",
+                "recommended_action": "Block navigation immediately. Log link to enterprise security telemetry for threat triage."
+            },
+            "ml_risk_component": 100.0,
+            "heuristic_adjustment": 1.2,
+            "heuristic_signals": [
+                {
+                    "id": "H_UNENCRYPTED_HTTP",
+                    "name": "Unencrypted HTTP Scheme",
+                    "category": "Security & Protocol",
+                    "weight": 4.0,
+                    "description": "The URL specifies unencrypted HTTP ('http://').",
+                    "overlap_feature": "has_https"
+                }
+            ],
+            "heuristic_signals_count": 1,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 0,
+                        "contribution": 0.736529,
+                        "absolute_contribution": 0.736529,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.7365)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 2,
+                        "contribution": -0.052792,
+                        "absolute_contribution": 0.052792,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0528)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 0,
+                        "contribution": -0.049814,
+                        "absolute_contribution": 0.049814,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0498)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.0,
+                        "contribution": -0.029391,
+                        "absolute_contribution": 0.029391,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0294)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    },
+                    {
+                        "feature": "num_special_chars",
+                        "name": "Special Character Count",
+                        "category": "Character Distribution",
+                        "value": 5,
+                        "contribution": -0.022223,
+                        "absolute_contribution": 0.022223,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0222)",
+                        "description": "Total count of non-alphanumeric punctuation and delimiter characters."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [
+                "Unencrypted connection: Legitimate modern services overwhelmingly mandate HTTPS."
+            ],
+            "explanation": "The URL receives an Operational Risk Score of 100/100 (CRITICAL RISK), reflecting a model-estimated phishing probability of 100.0%. Active structural risk signals include: 'Unencrypted HTTP Scheme'. Model feature attribution indicates that 'HTTPS Scheme Indicator' (+0.737) contributed toward phishing. Conversely, 'Slash Count' (-0.053), 'Path Length' (-0.050) exerted downward pressure toward a legitimate classification. Operational Notice: Unencrypted connection: Legitimate modern services overwhelmingly mandate HTTPS. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        },
+        {
+            "url": "https://www.downapp.com",
+            "prediction": "LEGITIMATE (BENIGN)",
+            "is_phishing": false,
+            "model_estimated_phishing_probability": 0.0019,
+            "model_estimated_phishing_probability_pct": 0.19,
+            "operational_risk_score": 0,
+            "risk_level": "LOW",
+            "risk_level_details": {
+                "range": [
+                    0,
+                    20
+                ],
+                "label": "Low Risk",
+                "description": "Minimal structural anomaly; consistent with standard benign URL conventions.",
+                "recommended_action": "Allow navigation. Standard browser security controls remain active."
+            },
+            "ml_risk_component": 0.19,
+            "heuristic_adjustment": -0.91,
+            "heuristic_signals": [
+                {
+                    "id": "H_STANDARD_BENIGN_PROFILE",
+                    "name": "Standard Benign Root Structure",
+                    "category": "Protective Context",
+                    "weight": -3.0,
+                    "description": "URL exhibits standard HTTPS root structure without subdomains, digits, or keywords.",
+                    "overlap_feature": "has_https"
+                }
+            ],
+            "heuristic_signals_count": 1,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "special_char_ratio",
+                        "name": "Special Character Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.2174,
+                        "contribution": 0.007102,
+                        "absolute_contribution": 0.007102,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0071)",
+                        "description": "Proportion of characters in the URL that are non-alphanumeric punctuation (0.0 to 1.0)."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 1,
+                        "contribution": -0.222871,
+                        "absolute_contribution": 0.222871,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.2229)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    },
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 0,
+                        "contribution": -0.067584,
+                        "absolute_contribution": 0.067584,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0676)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 2,
+                        "contribution": -0.061955,
+                        "absolute_contribution": 0.061955,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0620)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.0,
+                        "contribution": -0.03556,
+                        "absolute_contribution": 0.03556,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0356)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [
+                "Standard root structure: Typical of legitimate corporate domains, but also adopted by evasive landing pages."
+            ],
+            "explanation": "The URL receives an Operational Risk Score of 0/100 (LOW RISK), reflecting a model-estimated phishing probability of 0.2%. Active structural risk signals include: 'Standard Benign Root Structure'. Model feature attribution indicates that 'Special Character Ratio' (+0.007) contributed toward phishing. Conversely, 'HTTPS Scheme Indicator' (-0.223), 'Path Length' (-0.068) exerted downward pressure toward a legitimate classification. Operational Notice: Standard root structure: Typical of legitimate corporate domains, but also adopted by evasive landing pages. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        },
+        {
+            "url": "https://www.cfg.me",
+            "prediction": "LEGITIMATE (BENIGN)",
+            "is_phishing": false,
+            "model_estimated_phishing_probability": 0.003,
+            "model_estimated_phishing_probability_pct": 0.3,
+            "operational_risk_score": 0,
+            "risk_level": "LOW",
+            "risk_level_details": {
+                "range": [
+                    0,
+                    20
+                ],
+                "label": "Low Risk",
+                "description": "Minimal structural anomaly; consistent with standard benign URL conventions.",
+                "recommended_action": "Allow navigation. Standard browser security controls remain active."
+            },
+            "ml_risk_component": 0.3,
+            "heuristic_adjustment": -0.91,
+            "heuristic_signals": [
+                {
+                    "id": "H_STANDARD_BENIGN_PROFILE",
+                    "name": "Standard Benign Root Structure",
+                    "category": "Protective Context",
+                    "weight": -3.0,
+                    "description": "URL exhibits standard HTTPS root structure without subdomains, digits, or keywords.",
+                    "overlap_feature": "has_https"
+                }
+            ],
+            "heuristic_signals_count": 1,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "special_char_ratio",
+                        "name": "Special Character Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.2778,
+                        "contribution": 0.014988,
+                        "absolute_contribution": 0.014988,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0150)",
+                        "description": "Proportion of characters in the URL that are non-alphanumeric punctuation (0.0 to 1.0)."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 1,
+                        "contribution": -0.228168,
+                        "absolute_contribution": 0.228168,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.2282)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    },
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 0,
+                        "contribution": -0.067584,
+                        "absolute_contribution": 0.067584,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0676)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 2,
+                        "contribution": -0.061955,
+                        "absolute_contribution": 0.061955,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0620)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.0,
+                        "contribution": -0.035442,
+                        "absolute_contribution": 0.035442,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0354)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [
+                "Standard root structure: Typical of legitimate corporate domains, but also adopted by evasive landing pages."
+            ],
+            "explanation": "The URL receives an Operational Risk Score of 0/100 (LOW RISK), reflecting a model-estimated phishing probability of 0.3%. Active structural risk signals include: 'Standard Benign Root Structure'. Model feature attribution indicates that 'Special Character Ratio' (+0.015) contributed toward phishing. Conversely, 'HTTPS Scheme Indicator' (-0.228), 'Path Length' (-0.068) exerted downward pressure toward a legitimate classification. Operational Notice: Standard root structure: Typical of legitimate corporate domains, but also adopted by evasive landing pages. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        },
+        {
+            "url": "https://www.cns11643.gov.tw",
+            "prediction": "POTENTIAL PHISHING",
+            "is_phishing": true,
+            "model_estimated_phishing_probability": 0.5293,
+            "model_estimated_phishing_probability_pct": 52.93,
+            "operational_risk_score": 53,
+            "risk_level": "MODERATE",
+            "risk_level_details": {
+                "range": [
+                    41,
+                    60
+                ],
+                "label": "Moderate / Borderline Risk",
+                "description": "Ambiguous lexical profile or borderline model confidence. Signals heightened uncertainty.",
+                "recommended_action": "Heightened scrutiny required. Display contextual warning before user credential entry."
+            },
+            "ml_risk_component": 52.93,
+            "heuristic_adjustment": 0.0,
+            "heuristic_signals": [],
+            "heuristic_signals_count": 0,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.1852,
+                        "contribution": 0.29834,
+                        "absolute_contribution": 0.29834,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.2983)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    },
+                    {
+                        "feature": "num_digits",
+                        "name": "Digit Count",
+                        "category": "Character Distribution",
+                        "value": 5,
+                        "contribution": 0.285829,
+                        "absolute_contribution": 0.285829,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.2858)",
+                        "description": "Total count of numeric characters (0-9) throughout the URL."
+                    },
+                    {
+                        "feature": "num_subdomains",
+                        "name": "Subdomain Count",
+                        "category": "Domain & Infrastructure",
+                        "value": 1,
+                        "contribution": 0.058587,
+                        "absolute_contribution": 0.058587,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0586)",
+                        "description": "Number of subdomain labels preceding the registered domain name."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 1,
+                        "contribution": -0.239067,
+                        "absolute_contribution": 0.239067,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.2391)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    },
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 2,
+                        "contribution": -0.111717,
+                        "absolute_contribution": 0.111717,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.1117)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 0,
+                        "contribution": -0.09271,
+                        "absolute_contribution": 0.09271,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0927)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "url_length",
+                        "name": "URL Length",
+                        "category": "Length & Hierarchy",
+                        "value": 27,
+                        "contribution": -0.071586,
+                        "absolute_contribution": 0.071586,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0716)",
+                        "description": "Total character count of the complete URL string."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [
+                "Borderline Model Decision: Model probability (52.9%) is near the classification threshold (0.50). Heightened scrutiny and manual verification recommended."
+            ],
+            "explanation": "The URL receives an Operational Risk Score of 53/100 (MODERATE RISK), reflecting a model-estimated phishing probability of 52.9%. No high-severity structural risk heuristics were triggered. Model feature attribution indicates that 'Digit Ratio' (+0.298), 'Digit Count' (+0.286) contributed toward phishing. Conversely, 'HTTPS Scheme Indicator' (-0.239), 'Slash Count' (-0.112) exerted downward pressure toward a legitimate classification. Operational Notice: Borderline Model Decision: Model probability (52.9%) is near the classification threshold (0.50). Heightened scrutiny and manual verification recommended. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        },
+        {
+            "url": "http://192.168.1.1/admin/login.php",
+            "prediction": "POTENTIAL PHISHING",
+            "is_phishing": true,
+            "model_estimated_phishing_probability": 1.0,
+            "model_estimated_phishing_probability_pct": 100.0,
+            "operational_risk_score": 100,
+            "risk_level": "CRITICAL",
+            "risk_level_details": {
+                "range": [
+                    81,
+                    100
+                ],
+                "label": "Critical Risk",
+                "description": "Very high model probability and/or severe structural abuse indicators (e.g. direct IP, shortener, obfuscation).",
+                "recommended_action": "Block navigation immediately. Log link to enterprise security telemetry for threat triage."
+            },
+            "ml_risk_component": 100.0,
+            "heuristic_adjustment": 4.5,
+            "heuristic_signals": [
+                {
+                    "id": "H_IP_HOST",
+                    "name": "Direct IP Address Host",
+                    "category": "High-Severity Evasion",
+                    "weight": 8.0,
+                    "description": "The URL specifies a numeric IP address directly instead of a domain name.",
+                    "overlap_feature": "has_ip_address"
+                },
+                {
+                    "id": "H_HIGH_DIGIT_RATIO",
+                    "name": "Elevated Numeric Character Density",
+                    "category": "Structural Complexity",
+                    "weight": 4.0,
+                    "description": "Numeric digits comprise 20% or more of all characters in the URL.",
+                    "overlap_feature": "digit_ratio"
+                },
+                {
+                    "id": "H_SUSPICIOUS_KEYWORD",
+                    "name": "Authentication Keyword Concentration",
+                    "category": "Lexical Semantics",
+                    "weight": 3.0,
+                    "description": "Contains predefined authentication or security tokens (e.g., 'login', 'verify', 'account').",
+                    "overlap_feature": "suspicious_keyword_present"
+                },
+                {
+                    "id": "H_UNENCRYPTED_HTTP",
+                    "name": "Unencrypted HTTP Scheme",
+                    "category": "Security & Protocol",
+                    "weight": 4.0,
+                    "description": "The URL specifies unencrypted HTTP ('http://').",
+                    "overlap_feature": "has_https"
+                }
+            ],
+            "heuristic_signals_count": 4,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 16,
+                        "contribution": 0.120279,
+                        "absolute_contribution": 0.120279,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.1203)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 4,
+                        "contribution": 0.103788,
+                        "absolute_contribution": 0.103788,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.1038)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.2353,
+                        "contribution": 0.084622,
+                        "absolute_contribution": 0.084622,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0846)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    },
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 0,
+                        "contribution": 0.07205,
+                        "absolute_contribution": 0.07205,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0721)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "hostname_length",
+                        "name": "Hostname Length",
+                        "category": "Length & Hierarchy",
+                        "value": 11,
+                        "contribution": -0.005842,
+                        "absolute_contribution": 0.005842,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0058)",
+                        "description": "Character count of the fully qualified domain name (FQDN)."
+                    },
+                    {
+                        "feature": "num_hyphens",
+                        "name": "Hyphen Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 0,
+                        "contribution": -0.005472,
+                        "absolute_contribution": 0.005472,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0055)",
+                        "description": "Total count of hyphen ('-') characters in the URL."
+                    },
+                    {
+                        "feature": "special_char_ratio",
+                        "name": "Special Character Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.2647,
+                        "contribution": -0.003117,
+                        "absolute_contribution": 0.003117,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0031)",
+                        "description": "Proportion of characters in the URL that are non-alphanumeric punctuation (0.0 to 1.0)."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [
+                "Direct IP host: Bypasses standard domain reputation and registration oversight.",
+                "High digit concentration: Correlates with machine-generated tokens or obfuscated hashes.",
+                "Authentication keywords present: Frequently observed in credential harvesting lure pages.",
+                "Unencrypted connection: Legitimate modern services overwhelmingly mandate HTTPS."
+            ],
+            "explanation": "The URL receives an Operational Risk Score of 100/100 (CRITICAL RISK), reflecting a model-estimated phishing probability of 100.0%. Active structural risk signals include: 'Direct IP Address Host', 'Elevated Numeric Character Density', 'Authentication Keyword Concentration'. Model feature attribution indicates that 'Path Length' (+0.120), 'Slash Count' (+0.104) contributed toward phishing. Conversely, 'Hostname Length' (-0.006), 'Hyphen Count' (-0.005) exerted downward pressure toward a legitimate classification. Operational Notice: Direct IP host: Bypasses standard domain reputation and registration oversight. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        },
+        {
+            "url": "https://netflix-vn.com",
+            "prediction": "POTENTIAL PHISHING",
+            "is_phishing": true,
+            "model_estimated_phishing_probability": 1.0,
+            "model_estimated_phishing_probability_pct": 100.0,
+            "operational_risk_score": 100,
+            "risk_level": "CRITICAL",
+            "risk_level_details": {
+                "range": [
+                    81,
+                    100
+                ],
+                "label": "Critical Risk",
+                "description": "Very high model probability and/or severe structural abuse indicators (e.g. direct IP, shortener, obfuscation).",
+                "recommended_action": "Block navigation immediately. Log link to enterprise security telemetry for threat triage."
+            },
+            "ml_risk_component": 100.0,
+            "heuristic_adjustment": 0.0,
+            "heuristic_signals": [],
+            "heuristic_signals_count": 0,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "num_dots",
+                        "name": "Dot Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 1,
+                        "contribution": 0.726528,
+                        "absolute_contribution": 0.726528,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.7265)",
+                        "description": "Total count of period ('.') characters throughout the URL."
+                    },
+                    {
+                        "feature": "num_hyphens",
+                        "name": "Hyphen Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 1,
+                        "contribution": 0.09311,
+                        "absolute_contribution": 0.09311,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0931)",
+                        "description": "Total count of hyphen ('-') characters in the URL."
+                    },
+                    {
+                        "feature": "special_char_ratio",
+                        "name": "Special Character Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.2273,
+                        "contribution": 0.027826,
+                        "absolute_contribution": 0.027826,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0278)",
+                        "description": "Proportion of characters in the URL that are non-alphanumeric punctuation (0.0 to 1.0)."
+                    },
+                    {
+                        "feature": "num_special_chars",
+                        "name": "Special Character Count",
+                        "category": "Character Distribution",
+                        "value": 5,
+                        "contribution": 0.021074,
+                        "absolute_contribution": 0.021074,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0211)",
+                        "description": "Total count of non-alphanumeric punctuation and delimiter characters."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 1,
+                        "contribution": -0.147471,
+                        "absolute_contribution": 0.147471,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.1475)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    },
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 0,
+                        "contribution": -0.06757,
+                        "absolute_contribution": 0.06757,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0676)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 2,
+                        "contribution": -0.058539,
+                        "absolute_contribution": 0.058539,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0585)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.0,
+                        "contribution": -0.040433,
+                        "absolute_contribution": 0.040433,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0404)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [],
+            "explanation": "The URL receives an Operational Risk Score of 100/100 (CRITICAL RISK), reflecting a model-estimated phishing probability of 100.0%. No high-severity structural risk heuristics were triggered. Model feature attribution indicates that 'Dot Count' (+0.727), 'Hyphen Count' (+0.093) contributed toward phishing. Conversely, 'HTTPS Scheme Indicator' (-0.147), 'Path Length' (-0.068) exerted downward pressure toward a legitimate classification. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        },
+        {
+            "url": "https://bit.ly/secure-banking-alert",
+            "prediction": "POTENTIAL PHISHING",
+            "is_phishing": true,
+            "model_estimated_phishing_probability": 1.0,
+            "model_estimated_phishing_probability_pct": 100.0,
+            "operational_risk_score": 100,
+            "risk_level": "CRITICAL",
+            "risk_level_details": {
+                "range": [
+                    81,
+                    100
+                ],
+                "label": "Critical Risk",
+                "description": "Very high model probability and/or severe structural abuse indicators (e.g. direct IP, shortener, obfuscation).",
+                "recommended_action": "Block navigation immediately. Log link to enterprise security telemetry for threat triage."
+            },
+            "ml_risk_component": 100.0,
+            "heuristic_adjustment": 2.7,
+            "heuristic_signals": [
+                {
+                    "id": "H_URL_SHORTENER",
+                    "name": "URL Shortener Service",
+                    "category": "High-Severity Evasion",
+                    "weight": 6.0,
+                    "description": "The URL host belongs to a known redirection or URL shortening service.",
+                    "overlap_feature": "has_url_shortener"
+                },
+                {
+                    "id": "H_SUSPICIOUS_KEYWORD",
+                    "name": "Authentication Keyword Concentration",
+                    "category": "Lexical Semantics",
+                    "weight": 3.0,
+                    "description": "Contains predefined authentication or security tokens (e.g., 'login', 'verify', 'account').",
+                    "overlap_feature": "suspicious_keyword_present"
+                }
+            ],
+            "heuristic_signals_count": 2,
+            "local_feature_attributions": {
+                "top_positive_contributors": [
+                    {
+                        "feature": "num_slashes",
+                        "name": "Slash Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 3,
+                        "contribution": 0.180008,
+                        "absolute_contribution": 0.180008,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.1800)",
+                        "description": "Total count of forward slash ('/') characters in the URL."
+                    },
+                    {
+                        "feature": "path_length",
+                        "name": "Path Length",
+                        "category": "Length & Hierarchy",
+                        "value": 21,
+                        "contribution": 0.17796,
+                        "absolute_contribution": 0.17796,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.1780)",
+                        "description": "Character count of the URL path following the hostname."
+                    },
+                    {
+                        "feature": "num_special_chars",
+                        "name": "Special Character Count",
+                        "category": "Character Distribution",
+                        "value": 7,
+                        "contribution": 0.084796,
+                        "absolute_contribution": 0.084796,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0848)",
+                        "description": "Total count of non-alphanumeric punctuation and delimiter characters."
+                    },
+                    {
+                        "feature": "num_dots",
+                        "name": "Dot Count",
+                        "category": "Delimiter & Punctuation",
+                        "value": 1,
+                        "contribution": 0.081108,
+                        "absolute_contribution": 0.081108,
+                        "direction": "increases_phishing",
+                        "effect_text": "Pushes prediction toward phishing (+0.0811)",
+                        "description": "Total count of period ('.') characters throughout the URL."
+                    }
+                ],
+                "top_negative_contributors": [
+                    {
+                        "feature": "has_https",
+                        "name": "HTTPS Scheme Indicator",
+                        "category": "Security & Protocol",
+                        "value": 1,
+                        "contribution": -0.03964,
+                        "absolute_contribution": 0.03964,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0396)",
+                        "description": "Binary flag indicating whether the URL specifies the HTTPS protocol scheme (1) or not (0)."
+                    },
+                    {
+                        "feature": "digit_ratio",
+                        "name": "Digit Ratio",
+                        "category": "Character Distribution",
+                        "value": 0.0,
+                        "contribution": -0.036296,
+                        "absolute_contribution": 0.036296,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0363)",
+                        "description": "Proportion of characters in the URL that are numeric digits (0.0 to 1.0)."
+                    },
+                    {
+                        "feature": "num_digits",
+                        "name": "Digit Count",
+                        "category": "Character Distribution",
+                        "value": 0,
+                        "contribution": -0.022684,
+                        "absolute_contribution": 0.022684,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0227)",
+                        "description": "Total count of numeric characters (0-9) throughout the URL."
+                    },
+                    {
+                        "feature": "num_subdomains",
+                        "name": "Subdomain Count",
+                        "category": "Domain & Infrastructure",
+                        "value": 0,
+                        "contribution": -0.017899,
+                        "absolute_contribution": 0.017899,
+                        "direction": "decreases_phishing",
+                        "effect_text": "Pushes prediction toward legitimate (-0.0179)",
+                        "description": "Number of subdomain labels preceding the registered domain name."
+                    }
+                ],
+                "baseline_prior_bias": 0.4999
+            },
+            "warnings": [
+                "Shortened URL: Destination domain is obscured, preventing visual domain verification.",
+                "Authentication keywords present: Frequently observed in credential harvesting lure pages."
+            ],
+            "explanation": "The URL receives an Operational Risk Score of 100/100 (CRITICAL RISK), reflecting a model-estimated phishing probability of 100.0%. Active structural risk signals include: 'URL Shortener Service', 'Authentication Keyword Concentration'. Model feature attribution indicates that 'Slash Count' (+0.180), 'Path Length' (+0.178) contributed toward phishing. Conversely, 'HTTPS Scheme Indicator' (-0.040), 'Digit Ratio' (-0.036) exerted downward pressure toward a legitimate classification. Operational Notice: Shortened URL: Destination domain is obscured, preventing visual domain verification. Academic Disclosure: These indicators describe statistical model behavior and lexical properties; they do not establish causal attacker intent or inspect real-time server contents.",
+            "methodology_disclosures": {
+                "risk_formula": "Risk_Score = clip(round(100 * P(phish) + alpha(P) * delta_heuristics), 0, 100)",
+                "double_counting_mitigation": "Heuristic adjustments are confidence-damped via alpha(P) and bounded to [-10, +15].",
+                "academic_disclosure": "The operational risk score is a decision-support metric combining model probability with structural alerts. It does not represent a causal guarantee of attacker intent or external webpage safety."
+            }
+        }
+    ],
+    "academic_disclosure": "1. The operational risk score is a decision-support metric combining model probability with structural alerts. 2. Heuristic signals are empirical indicators and do not constitute proof of phishing. 3. The system operates strictly offline on 27 static URL features without network requests or DOM inspection. 4. The risk engine does not claim guaranteed zero-day detection."
+}
